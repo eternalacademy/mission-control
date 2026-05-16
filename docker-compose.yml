@@ -31,9 +31,8 @@ services:
         required: false
     volumes:
       - mc-data:/app/.data
-      # Optional: mount your OpenClaw state directory read-only so Mission Control
-      # can read agent configs and memory. Uncomment and adjust the host path:
-      # - ${OPENCLAW_HOME:-~/.openclaw}:/run/openclaw:ro
+      # Mount OpenClaw state directory read-only so Mission Control can read agent configs
+      - ${OPENCLAW_HOME_HOST:-C:\Users\umesh\.openclaw}:/run/openclaw:ro
     # Allow the container to reach an OpenClaw gateway running on the Docker host.
     # Docker Desktop (macOS/Windows): host.docker.internal works out of the box.
     # Linux: this extra_hosts entry maps host.docker.internal to the host IP.
@@ -70,6 +69,12 @@ services:
     environment:
       - PORT=${PORT:-3000}
       - NEXT_PUBLIC_GATEWAY_OPTIONAL=true
+      - OPENCLAW_HOME=/run/openclaw
+      - MC_ALLOW_ANY_HOST=true
+      - MC_ALLOWED_HOSTS=localhost,127.0.0.1,::1,10.20.99.163
+      - OPENCLAW_GATEWAY_HOST=host.docker.internal
+      - OPENCLAW_GATEWAY_PORT=18789
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
 
 volumes:
   mc-data:
