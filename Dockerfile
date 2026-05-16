@@ -1,5 +1,5 @@
 FROM node:22.22.0-slim AS base
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@9 --activate
 WORKDIR /app
 
 FROM base AS deps
@@ -10,8 +10,7 @@ COPY .npmrc ./
 COPY .pnpm-approved-builds ./
 # better-sqlite3 requires native compilation tools
 RUN apt-get update && apt-get install -y python3 make g++ --no-install-recommends && rm -rf /var/lib/apt/lists/*
-RUN pnpm approve-builds --all 2>/dev/null || true
-RUN pnpm install
+RUN pnpm install --frozen-lockfile || pnpm install
 
 FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
