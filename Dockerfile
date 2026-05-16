@@ -10,6 +10,7 @@ COPY .npmrc ./
 COPY .pnpm-approved-builds ./
 # better-sqlite3 requires native compilation tools
 RUN apt-get update && apt-get install -y python3 make g++ --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN pnpm approve-builds --all 2>/dev/null || true
 RUN pnpm install
 
 FROM base AS build
